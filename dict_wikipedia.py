@@ -4,7 +4,7 @@ from typing import List
 
 
 
-def tokenize(self, text: str) -> List[str]:
+def tokenize(text: str) -> List[str]:
     """Splits given text into a list of the individual tokens in order
 
     Args:
@@ -31,13 +31,34 @@ def tokenize(self, text: str) -> List[str]:
 
     if token != "":
         tokens.append(token.lower())
-    return tokens
-article = wikipedia.page("Artemis II", autosuggest = False).content
-tokens = tokenize(article)
+    return tokens   
+
+article = wikipedia.page("Artemis II", auto_suggest=False).content
+words = tokenize(article)
+
+with open("sorted_stoplist.txt", "r", encoding='utf8') as f:
+    stoplist = f.read()
+stoplist_tokenized = tokenize(stoplist)
+print(stoplist_tokenized)
+
+
 freqs = {}
 
-for word in tokens:
-    if word in freqs:
-        freqs[word] += 1
-    else:
-        freqs[word] = 1
+for word in words:
+    if word not in stoplist_tokenized:
+        if word in freqs:
+            freqs[word] += 1
+        else:
+            freqs[word] = 1
+
+unique_words = len(freqs)
+total_num_words = sum(freqs.values())
+print(f"Total Unique Words: {unique_words}")
+print(f"Total number of words: {total_num_words}")
+
+print()
+
+top_words = sorted(freqs.items(), key=lambda x: x[1], reverse=True)
+print("Top 20 words in content")
+for word, count in top_words[:20]:
+    print(f" {word} {count}")
