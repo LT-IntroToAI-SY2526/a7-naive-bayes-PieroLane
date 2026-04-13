@@ -71,9 +71,9 @@ class BayesClassifier:
         # <the rest of your code for updating frequencies here>
             print(f"{index}: {filename}")
             text = self.load_file(os.path.join(self.training_data_directory, filename))
-            print(text)
+            # print(text)
             tokens = self.tokenize(text)
-            print(tokens)
+            # print(tokens)
         # we want to fill pos_freqs and neg_freqs with the correct counts of words from
         # their respective reviews
         
@@ -104,6 +104,9 @@ class BayesClassifier:
         # avoid extra work in the future (using the save_dict method). The objects you
         # are saving are self.pos_freqs and self.neg_freqs and the filepaths to save to
         # are self.pos_filename and self.neg_filename
+        self.save_dict(self.pos_freqs, self.pos_filename)
+        self.save_dict(self.neg_freqs, self.neg_filename)
+    
 
     def classify(self, text: str) -> str:
         """Classifies given text as positive, or negative from calculating the
@@ -208,8 +211,7 @@ class BayesClassifier:
                 if token != "":
                     tokens.append(token.lower())
                     token = ""
-                if c.strip() != "":
-                    tokens.append(str(c.strip()))
+                
 
         if token != "":
             tokens.append(token.lower())
@@ -228,28 +230,33 @@ class BayesClassifier:
             freqs - dictionary of frequencies to update
         """
         # TODO: your work here
-        pass  # remove this line once you've implemented this method
+       
+        for word in words:
+            if word in freqs:
+                freqs[word] += 1
+            else:
+                freqs[word] = 1
 
 
 if __name__ == "__main__":
     # uncomment the below lines once you've implemented `train` & `classify`
     b = BayesClassifier()
-    # a_list_of_words = ["I", "really", "like", "this", "movie", ".", "I", "hope", \
-    #                    "you", "like", "it", "too"]
-    # a_dictionary = {}
-    # b.update_dict(a_list_of_words, a_dictionary)
-    # assert a_dictionary["I"] == 2, "update_dict test 1"
-    # assert a_dictionary["like"] == 2, "update_dict test 2"
-    # assert a_dictionary["really"] == 1, "update_dict test 3"
-    # assert a_dictionary["too"] == 1, "update_dict test 4"
-    # print("update_dict tests passed.")
+    a_list_of_words = ["I", "really", "like", "this", "movie", ".", "I", "hope", \
+                       "you", "like", "it", "too"]
+    a_dictionary = {}
+    b.update_dict(a_list_of_words, a_dictionary)
+    assert a_dictionary["I"] == 2, "update_dict test 1"
+    assert a_dictionary["like"] == 2, "update_dict test 2"
+    assert a_dictionary["really"] == 1, "update_dict test 3"
+    assert a_dictionary["too"] == 1, "update_dict test 4"
+    print("update_dict tests passed.")
 
-    # pos_denominator = sum(b.pos_freqs.values())
-    # neg_denominator = sum(b.neg_freqs.values())
+    pos_denominator = sum(b.pos_freqs.values())
+    neg_denominator = sum(b.neg_freqs.values())
 
-    # print("\nThese are the sums of values in the positive and negative dicitionaries.")
-    # print(f"sum of positive word counts is: {pos_denominator}")
-    # print(f"sum of negative word counts is: {neg_denominator}")
+    print("\nThese are the sums of values in the positive and negative dicitionaries.")
+    print(f"sum of positive word counts is: {pos_denominator}")
+    print(f"sum of negative word counts is: {neg_denominator}")
 
     # print("\nHere are some sample word counts in the positive and negative dicitionaries.")
     # print(f"count for the word 'love' in positive dictionary {b.pos_freqs['love']}")
