@@ -158,9 +158,9 @@ class BayesClassifier:
         # determine whether positive or negative was more probable (i.e. which one was
         # larger)
         if pos_score > neg_score:
-            return "positive", pos_score
+            return "positive"
         else:
-            return "negative", neg_score
+            return "negative"
         
         
 
